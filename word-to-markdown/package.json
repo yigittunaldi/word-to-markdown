@@ -1,0 +1,27 @@
+{
+  "name": "word-to-markdown",
+  "version": "0.0.0",
+  "description": "Convert Word documents to beautiful Markdown.",
+  "type": "module",
+  "engines": {
+    "node": ">= 20.9 < 21"
+  },
+  "scripts": {
+    "fix": "eslint --fix --ext .ts . && prettier --write .",
+    "build": "tsc",
+    "build:web": "webpack build",
+    "server:web": "webpack serve --open",
+    "lint": "eslint . --ext .ts --ext .mts",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "all": "npm run lint && npm run test && npm run build",
+    "server": "node build/server.js",
+    "start": "npm run server:web"
+  },
+  "volta": {
+    "node": "20.10.0"
+  },
+  "bin": {
+    "w2m": "build/cli.js"
+  },
+  "main": "build/main.js"
+}
