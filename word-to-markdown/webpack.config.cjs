@@ -1,9 +1,13 @@
 const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
-const nodeModulePrefixRe = /^node:/u;
+const path = require('path');
 
 module.exports = {
   entry: ['./src/index.ts'],
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
+  },
   stats: {
     errors: true,
     warnings: false,
@@ -18,16 +22,6 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    static: './dist',
-    client: {
-      overlay: {
-        errors: true,
-        warnings: false,
-        runtimeErrors: true,
-      },
-    },
-  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
@@ -41,35 +35,29 @@ module.exports = {
       url: require.resolve('url/'),
     },
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      maxInitialRequests: 30,
-      maxAsyncRequests: 30,
-      cacheGroups: {
-        default: false,
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          reuseExistingChunk: true,
-        },
+  mode: 'development',
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    historyApiFallback: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: true,
       },
     },
-    minimizer: [new TerserPlugin()],
   },
-  performance: {
-    hints: 'warning',
-    maxAssetSize: 200000, 
-    maxEntrypointSize: 400000, 
-  },
-  mode: 'production', 
   plugins: [
-    new webpack.NormalModuleReplacementPlugin(
-      nodeModulePrefixRe,
-      (resource) => {
-        const module = resource.request.replace(nodeModulePrefixRe, '');
-        resource.request = module;
-      },
-    ),
+    new webpack.NormalModuleReplacementPlugin(/^node:/u, (resource) => {
+      const module = resource.request.replace(/^node:/u, '');
+      resource.request = module;
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
   ],
+  performance: {
+    maxEntrypointSize: 400000,
+    maxAssetSize: 1000000,
+  },
 };
