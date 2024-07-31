@@ -1,57 +1,13 @@
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const nodeModulePrefixRe = /^node:/u;
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-module.exports = {
-  entry: './src/index.ts',
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  mode: 'development',
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist',
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-    }),
-  ],
-  stats: {
-    warnings: true,
-    errors: true,
-    modules: false,
-    performance: true,
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
-};
-
 
 module.exports = {
   entry: ['./src/index.ts'],
-  stats: { warnings: false },
+  stats: {
+    errors: true,
+    warnings: false,
+  },
   module: {
     unknownContextCritical: false,
     rules: [
@@ -85,7 +41,28 @@ module.exports = {
       url: require.resolve('url/'),
     },
   },
-  mode: 'production',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: 30,
+      maxAsyncRequests: 30,
+      cacheGroups: {
+        default: false,
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    minimizer: [new TerserPlugin()],
+  },
+  performance: {
+    hints: 'warning',
+    maxAssetSize: 200000, 
+    maxEntrypointSize: 400000, 
+  },
+  mode: 'production', 
   plugins: [
     new webpack.NormalModuleReplacementPlugin(
       nodeModulePrefixRe,

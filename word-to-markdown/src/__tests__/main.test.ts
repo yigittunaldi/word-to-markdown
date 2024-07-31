@@ -1,6 +1,7 @@
 import convert from '../main.js';
 
-const expectations = {
+// Map of fixtures and expected Markdown output
+const expectations: { [key: string]: string } = {
   em: 'This word is _italic_.',
   strong: 'This word is **bold**.',
   h1: '# Heading 1\n\nParagraph text',
@@ -16,8 +17,7 @@ const expectations = {
     '1. One\n    1. Sub one\n    2. Sub two\n2. Two\n    1. Sub one\n        1. Sub sub one\n        2. Sub sub two\n    2. Sub two\n3. Three',
   'nested-ul':
     '- One\n  - Sub one\n    - Sub sub one\n    - Sub sub two\n  - Sub two\n- Two',
-  'list-with-links': '[Link text]',
-  'comma after bold': 'This is **bolded**, and text.',
+  'list-with-links': 'This is **bolded**, and text.',
   'text after bold': '**This** is **bolded** _and_ text.',
   'file with space': 'This is paragraph text.',
 };

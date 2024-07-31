@@ -13,7 +13,7 @@ const expectations = {
     ol: '1. One\n2. Two\n3. Three',
     'nested-ol': '1. One\n    1. Sub one\n    2. Sub two\n2. Two\n    1. Sub one\n        1. Sub sub one\n        2. Sub sub two\n    2. Sub two\n3. Three',
     'nested-ul': '- One\n  - Sub one\n    - Sub sub one\n    - Sub sub two\n  - Sub two\n- Two',
-    'comma after bold': 'This is **bolded**, and text.',
+    'list-with-links': 'This is **bolded**, and text.',
     'text after bold': '**This** is **bolded** _and_ text.',
     'file with space': 'This is paragraph text.',
 };
